@@ -1,0 +1,193 @@
+definitions:
+  models.Song:
+    properties:
+      group:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      releaseDate:
+        type: string
+      text:
+        type: string
+      title:
+        type: string
+    type: object
+  models.SongInfo:
+    properties:
+      group:
+        type: string
+      link:
+        type: string
+      releaseDate:
+        type: string
+      text:
+        type: string
+      title:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /songs:
+    get:
+      description: Get songs with optional filtering by group and song title, and
+        pagination (songs per page)
+      parameters:
+      - description: Filter by group
+        in: query
+        name: group
+        type: string
+      - description: Filter by song title
+        in: query
+        name: song
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Limit per page
+        in: query
+        name: limit
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Song'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all info about songs
+      tags:
+      - songs
+    post:
+      consumes:
+      - application/json
+      description: Add a new song to the database, fetch song details from external
+        API
+      parameters:
+      - description: Filter by group
+        in: query
+        name: group
+        type: string
+      - description: Filter by song title
+        in: query
+        name: song
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add a new song
+      tags:
+      - songs
+  /songs/{id}:
+    delete:
+      description: Delete song by ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete song
+      tags:
+      - songs
+    put:
+      consumes:
+      - application/json
+      description: Update song information by ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Song details
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.SongInfo'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update song details
+      tags:
+      - songs
+  /songs/text:
+    get:
+      description: Get song text by song ID, paginated by verses
+      parameters:
+      - description: Filter by group
+        in: query
+        name: group
+        required: true
+        type: string
+      - description: Filter by song title
+        in: query
+        name: song
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 4
+        description: Verses per page
+        in: query
+        name: limit
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get song text by verses
+      tags:
+      - songs
+swagger: "2.0"
