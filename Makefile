@@ -50,6 +50,7 @@ migrate_down:
 
 build:
 	@echo "Build go server"
+	swag init
 	go build main.go
 
 run:
